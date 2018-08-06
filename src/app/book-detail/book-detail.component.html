@@ -1,0 +1,23 @@
+<h1>{{book.title}} Details</h1>
+
+<ul>
+  <li><strong>Title:</strong> {{ book.title }}</li>
+  <li><strong>Author:</strong> {{ book.author.givenName }}</li>
+  <li><strong>publisher:</strong> {{ book.publisher }}</li>
+  <li><strong>edition:</strong> {{ book.edition }}</li>
+  <li><strong>ISBN:</strong> {{ book.ISBN }}</li>
+  <li><strong>publishingDate:</strong> {{ book.publishingDate }}</li>
+  <li><strong>Chapters:</strong>
+    <ul *ngIf ="book.chapters.length">
+     
+          <li  *ngFor="let data of book.chapters">
+            <strong>Title:</strong> {{ data.title }}
+            <strong>Start Page:</strong> {{ data.startPage }}
+            <strong>Number Of Pages:</strong> {{ data.numberOfPages }}
+          </li>
+     
+        </ul>
+  
+  </li>
+  
+</ul>

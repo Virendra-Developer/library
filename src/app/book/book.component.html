@@ -1,0 +1,152 @@
+
+<div *ngIf="!formEdit">
+    <h4>{{ !book.id ? "Add" : "Edit"}} Book</h4>
+    <form #bookForm = "ngForm" (ngSubmit)="bookForm.submitted && bookForm.valid && addBook()" novalidate>
+        <ul class="form-style-1">
+            
+            <li>
+                <label>Title <span class="required">*</span></label>
+                <input class="field-long" type="text" name="title" [(ngModel)] = "book.title" name="title"
+                #title = "ngModel" required>
+                <div *ngIf="title.invalid && (bookForm.submitted)"
+                class="alert alert-danger">
+                <div *ngIf = "title.errors?.required">
+                    Title field can't be blank
+                </div>
+              </div>
+            </li>
+            <li>
+                
+                <label>Author<span class="required">*</span></label>
+                
+
+                <select  class="field-select" name="author" [(ngModel)] = "book.author" name="author"
+                #author = "ngModel" required [compareWith]="byAuthor">
+                  <option *ngFor="let o of authors" [ngValue]="o">
+                     {{o.givenName}}
+                  </option>
+               </select>
+               <div *ngIf="author.invalid && (bookForm.submitted)"
+               class="alert alert-danger">
+               <div *ngIf = "author.errors?.required">
+                Author field can't be blank
+               </div>
+            </div>
+            </li>
+
+            <li>
+                <label>publisher</label>
+                
+                <input class="field-long" type="text"  [(ngModel)] = "book.publisher" name="publisher"
+                #publisher = "ngModel">
+            </li>
+
+            
+            <li>
+                <label>Edition</label>
+                
+                <input class="field-long" type="text" name="edition" [(ngModel)] = "book.edition" name="edition"
+                #edition = "ngModel">
+            </li>
+
+            <li>
+                <label>ISBN<span class="required">*</span></label>
+                
+
+                <input class="field-long" type="text"  name="ISBN" [(ngModel)] = "book.ISBN" name="ISBN"
+                #ISBN = "ngModel" pattern="^\d+$" required>
+              
+                
+                 <div *ngIf="ISBN.invalid && (bookForm.submitted)"
+                 class="alert alert-danger">
+                 <div *ngIf = "ISBN.errors?.required">
+                ISBN field can't be blank
+                 </div>
+                 <div *ngIf = "ISBN.errors?.pattern">
+                ISBN should be numeric
+              </div>
+              </div>
+
+              
+            </li>
+
+            <li>
+                <label>Publishing Date</label>
+                <input class="field-long" type="date"   [ngModel] ="book.publishingDate | date:'yyyy-MM-dd'" (ngModelChange)="book.publishingDate = $event"   name="publishingDate"
+                #publishingDate = "ngModel" placeholder="yyyy-MM-dd">
+            </li>
+
+
+            <li>
+                <label>Chapters </label>
+                <div>
+                    
+                    <div *ngFor="let chapter of book.chapters; let i=index;">
+
+                        <li><label>Title <span class="required">*</span>  </label>
+                            <input type="text" name="field1" class="field-divided" placeholder="Title" [(ngModel)]="chapter.title" name="title[{{i}}]" #ctitle = "ngModel" required/>
+                            <div *ngIf="ctitle.invalid && (bookForm.submitted)"
+                class="alert alert-danger">
+                <div *ngIf = "ctitle.errors?.required">
+                    Title field can't be blank
+                </div></div>
+                            &nbsp;<input type="text" name="field2" class="field-divided"  placeholder="Start Page"  [(ngModel)]="chapter.startPage" name="startPage[{{i}}]" />&nbsp;<input type="text" name="field2" class="field-divided"  placeholder="Number Of Pages"  [(ngModel)]="chapter.numberOfPages" name="numberOfPages[{{i}}]"/> 
+                        <input type="button" (click)="removeChapter(i)" value="Delete Chapter"/> 
+                        </li>
+
+                      
+                      
+                    </div>
+                    <input type="button" value="Add Chapter" (click)="addChapter()">
+                  </div>
+                
+            </li>
+            <li>
+                <input type="submit" value="Submit" />
+                <input type="button" value="Cancel" (click)="toggleForm()" />
+                
+            </li>
+        </ul>
+        </form>
+</div>  
+
+<div  [hidden] = "!formEdit">
+    <h4>Books</h4>
+
+    <div class="clearfix"> <input type="button" value="Add New Book" (click)="setNewBook()" /> </div>
+
+    <br><br>
+    
+    
+
+    <table class="gridtable">
+        <tr>
+          
+            <th>id</th>
+            <th>Title</th>
+             <th>Author</th>
+             <th>Publisher</th>
+             <th>Edition</th>
+              <th> ISBN </th>
+              <th>Publishing Date</th>
+              <th>No. of chapters</th>
+              <th>Action</th>   
+              
+
+        </tr>
+        <tr *ngFor="let data of books | async; index as i">
+    <td>{{data.id}}</td>
+    <td>    <a (click)="redirectTobookDetail(data)">{{data.title}}</a></td>
+    <td>{{data.author.givenName}}</td>
+    <td>{{data.publisher}}</td>
+    <td>{{data.edition}}</td>
+    <td>{{data.ISBN}}</td>
+    <td>{{data.publishingDate | date: 'yyyy-MM-dd'}}</td>
+    <td>{{data.chapters.length}}</td>
+    <td  ><i class="material-icons" (click)="setBook(data)">edit</i> <i class="material-icons" (click)="removeBook(i)">delete</i> <i class="material-icons" (click)="redirectTobookDetail(data)">search</i> </td>
+    
+    </tr>
+        
+        </table>
+        
+    </div>
